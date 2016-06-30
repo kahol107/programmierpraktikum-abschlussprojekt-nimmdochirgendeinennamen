@@ -1,20 +1,26 @@
 package main.java;
 
+import java.io.File;
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 public class Controller {
-	//TODO thinking about a Phase manager class
+	//TODO thinking about ExceptionHandler
+	//TODO String backup Wrapper, used for GUI-flow and Babysteps aswell.
 	//for Babysteps backup and state at the same time
 	//might aswell take Tracker for backup tho
 
-	int  	  phase; //0 = Test, 1 = Code, 2 = Refactor
+	String	  backup;  //backup of Phase 1 code for prevPhase() on phase = 2;
+	Phase	  phase;
 	Babysteps babysteps;
 	Thread 	  t;
+	TDDTCompiler compiler;
 
 	@FXML private Pane pane;
 	@FXML private TextArea txtCode;
@@ -27,14 +33,15 @@ public class Controller {
 
 	@FXML
 	public void initialize() {
-		phase = 0;
+		phase = new Phase();
+		compiler = new TDDTCompiler();
 		babysteps = new Babysteps();
 	}
 	
 	@FXML
 	public void nextPhase() {
 		boolean passed = false;
-		switch (phase) {
+		switch (phase.get()) {
 			case 0: passed = checkTest();
 					break;
 			case 1: passed = checkCode();
@@ -44,29 +51,42 @@ public class Controller {
 		}
 
 		if (passed) {
-			if (phase < 2) phase++;
-			else 		   phase = 0;
-
+			if (phase.get() == 0) backup = txtCode.getText();
+			phase.next();
 			updateGUIElements(phase);
 		}
 	}
 
 	@FXML
 	public void prevPhase() {
-		if (phase > 0) {
-			phase--;
-			if (phase == 0)
-				btnPrevStep.setDisable(true);
+		if (phase.get() == 1) {
+			txtCode.setText(backup);
 		}
+		phase.previous();
 		updateGUIElements(phase);
 	}
 
 	@FXML
 	public void newTask() {
-		Task task = new Task((Stage) pane.getScene().getWindow());
+		FileChooser fc = new FileChooser();
+		fc.setTitle("Choose a catalog-folder");
+		File file = fc.showOpenDialog( (Stage) pane.getScene().getWindow() );
+		if (file == null) {
+			new TDDTDialog("alert", "File could not get read properly");
+			return;
+		}
+
+		TDDTTask task = new TDDTTask(file);
+
+		if (task.getCode() == null && task.getCode() == null) {
+			new TDDTDialog("alert", "The chosen file is not a Task");
+		}
+
 		txtCode.setText(task.getCode());
 		txtTest.setText(task.getTest());
 		babysteps.startPhase();
+		phase.reset();
+		updateGUIElements(phase);
 	}
 
 	@FXML
@@ -90,27 +110,26 @@ public class Controller {
 	
 	@FXML
 	public void turnBabystepsOff() {
+		//t.kill
 		babysteps.disable();
 	}
 	
 	@FXML
 	public void setBabystepsTime() {
-		Dialogs dialog = new Dialogs(
+		TDDTDialog dialog = new TDDTDialog(
 				"textInput", "babysteps duration in sec. (Between  1 and 180):"
 		);
 		int result = Integer.parseInt( (String)dialog.getValue() );
-		System.out.println(result);
 		if (result >= 1 && result <= 180) {
 			babysteps.setDuration(result);
 		} else {
-			new Dialogs("alert", "Input not acceptet. It has to be between 1 and 180");
+			new TDDTDialog("alert", "Input not acceptet. It has to be between 1 and 180");
 			return;
 		}
 	}
 
 	private boolean checkTest() {
-
-		//return false if not succeeded
+		compiler.compile(txtTest.getText(), true);
 		//settings for next phase
 		btnPrevStep.setDisable(false);
 		babysteps.startPhase();
@@ -118,27 +137,33 @@ public class Controller {
 	}
 
 	private boolean checkCode() {
-		//return false if not succeeded
+		boolean passed = compiler.compile(txtCode.getText(), false);
+		if (!passed) return false;
+		passed = compiler.compile(txtTest.getText(), true);
+		if (!passed) return false;
 		//settings for next phase
 		babysteps.startPhase();
 		return true;
 	}
 
 	private boolean checkRefactor() {
-		//return false if not succeeded
+		boolean passed = compiler.compile(txtCode.getText(), false);
+		if (!passed) return false;
+		passed = compiler.compile(txtTest.getText(), true);
+		if (!passed) return false;
 		//settings for next phase
-		btnPrevStep.setDisable(true);
 		babysteps.startPhase();
 		return true;
 	}
 
-	private void updateGUIElements(int phase) {
-		switch (phase) {
+	private void updateGUIElements(Phase phase) {
+		switch (phase.get()) {
 			case 0: imgTest.setOpacity(1.0);
 					imgCode.setOpacity(0.2);
 					imgRefactor.setOpacity(0.2);
 					txtTest.setDisable(false);
 					txtCode.setDisable(true);
+					btnPrevStep.setDisable(true);
 					break;
 			case 1: imgTest.setOpacity(0.2);
 					imgCode.setOpacity(1.0);
