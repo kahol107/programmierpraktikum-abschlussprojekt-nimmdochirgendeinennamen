@@ -1,97 +1,31 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-package projekt7;
+/*
+ * Copyright (c) 2016. Caro Jachmann, Dominik Kuhnen, Jule Pohlmann, Kai Brandt, Kai Holzinger
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License.
+ *
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and limitations under the License.
+ */
+
+package Chart;
 
 import java.io.File;
 
 import javafx.scene.Scene;
 import javafx.scene.chart.*;
-import javafx.stage.Stage;
 
 interface Chart{
-	static File file = new File("TrackingData.txt");
-	static Stage stage = new Stage();
-	
-	
-	int leseZeiten(int info);	//Liest aus der durch Tracking erstellten Textdatei die Zeiten der Phasen 
-								//aus. Je nach übergebenem int wird "red" = 1 zurückgegeben, "green" = 2 usw.
-	
-	PieChart erstellePieChart();				//Erstellt aus den Zeiten ein PieChart 
-	
-	Scene erstelleScene();			//Fügt den PieChart zu einer Scene hinzu und gibt diese zurück
-	
-	String setzteTitel();				//Gibt die übergebene Scene auf der Stage aus
+    File file = new File("TrackingData.txt");
+
+    //reads tracking data from tracking file and returns one of the values.
+	int leseZeiten(int info);
+    //returns a PieChart representing the time the user needed to finish the phase
+	PieChart erstellePieChart();
+    //creates a scene that contains the PieChart
+	Scene erstelleScene();
 }
-=======
-package projekt7;
-
-import java.io.File;
-
-import javafx.scene.Scene;
-import javafx.scene.chart.*;
-import javafx.stage.Stage;
-
-interface Chart{
-	static File file = new File("TrackingData.txt");
-	static Stage stage = new Stage();
-	
-	
-	int leseZeiten(int info);	//Liest aus der durch Tracking erstellten Textdatei die Zeiten der Phasen 
-								//aus. Je nach übergebenem int wird "red" = 1 zurückgegeben, "green" = 2 usw.
-
-	PieChart erstellePieChart();				//Erstellt aus den Zeiten ein PieChart 
-	
-	Scene erstelleScene(PieChart chart);			//Fügt den PieChart zu einer Scene hinzu und gibt diese zurück
-	
-	void gebeAus(Scene scene);				//Gibt die übergebene Scene auf der Stage aus
-}
->>>>>>> a55a274de2f524c3f9d0b9add30efd24ee2a4291
-=======
-package projekt7;
-
-import java.io.File;
-
-import javafx.scene.Scene;
-import javafx.scene.chart.*;
-import javafx.stage.Stage;
-
-interface Chart{
-	static File file = new File("TrackingData.txt");
-	static Stage stage = new Stage();
-	
-	
-	int leseZeiten(int info);	//Liest aus der durch Tracking erstellten Textdatei die Zeiten der Phasen 
-								//aus. Je nach übergebenem int wird "red" = 1 zurückgegeben, "green" = 2 usw.
-
-	PieChart erstellePieChart();				//Erstellt aus den Zeiten ein PieChart 
-	
-	Scene erstelleScene(PieChart chart);			//Fügt den PieChart zu einer Scene hinzu und gibt diese zurück
-	
-	void gebeAus(Scene scene);				//Gibt die übergebene Scene auf der Stage aus
-}
->>>>>>> origin/chart
-=======
-package projekt7;
-
-import java.io.File;
-
-import javafx.scene.Scene;
-import javafx.scene.chart.*;
-import javafx.stage.Stage;
-
-interface Chart{
-	static File file = new File("TrackingData.txt");
-	static Stage stage = new Stage();
-	
-	
-	int leseZeiten(int info);	//Liest aus der durch Tracking erstellten Textdatei die Zeiten der Phasen 
-								//aus. Je nach übergebenem int wird "red" = 1 zurückgegeben, "green" = 2 usw.
-
-	PieChart erstellePieChart();				//Erstellt aus den Zeiten ein PieChart 
-	
-	Scene erstelleScene(PieChart chart);			//Fügt den PieChart zu einer Scene hinzu und gibt diese zurück
-	
-	void gebeAus(Scene scene);				//Gibt die übergebene Scene auf der Stage aus
-}
->>>>>>> a55a274de2f524c3f9d0b9add30efd24ee2a4291
