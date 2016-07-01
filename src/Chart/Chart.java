@@ -15,6 +15,7 @@
 package Chart;
 
 import java.io.File;
+import java.io.IOException;
 
 import javafx.scene.Scene;
 import javafx.scene.chart.*;
@@ -23,9 +24,9 @@ interface Chart{
     File file = new File("TrackingData.txt");
 
     //reads tracking data from tracking file and returns one of the values.
-	int leseZeiten(int info);
+	int leseZeiten(int info) throws IOException;
     //returns a PieChart representing the time the user needed to finish the phase
-	PieChart erstellePieChart();
+	PieChart erstellePieChart() throws IOException;
     //creates a scene that contains the PieChart
 	Scene erstelleScene();
 }
