@@ -1,0 +1,6 @@
+red
+3
+green
+3
+refactor
+3
