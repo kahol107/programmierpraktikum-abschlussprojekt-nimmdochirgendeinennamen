@@ -36,6 +36,7 @@ public class TrackingChart extends Application implements Chart {
 		stage.setTitle("Tracking Analyse");
 		stage.getIcons().add(new Image("file:icon.png"));
 		stage.sizeToScene();
+		stage.setResizable(false);
 		stage.setScene(erstelleScene());
 		stage.show();
     }
